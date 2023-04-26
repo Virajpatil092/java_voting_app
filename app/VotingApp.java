@@ -62,6 +62,7 @@ public class VotingApp extends JFrame implements ActionListener {
     
                 candidateComboBox.addItem("Viraj");
                 candidateComboBox.addItem("Jyot");
+                candidateComboBox.addItem("Rutuja");
     
     
                 voteButton = new JButton("Vote");
@@ -190,25 +191,19 @@ public class VotingApp extends JFrame implements ActionListener {
             while((line = br.readLine()) != null){
                 list.add(line);
             }
-            int Viraj=0,Jyot=0;
+            int mx = 0;
+            String Winner = "";
             for(String str: list){
                 String[] arr = str.split(" ") ;
-                if(arr[0].equals("Viraj")){
-                    Viraj=Integer.parseInt(arr[1]);
-                }
-                else{
-                    Jyot = Integer.parseInt(arr[1]);
+                
+                int flag = Integer.parseInt(arr[1]);
+                if(flag > mx){
+                    mx = flag;
+                    Winner = arr[0];
                 }
             }
 
-            String result;
-            if (Viraj > Jyot) {
-                result = "Viraj won by " + (Viraj - Jyot) + " Votes";
-            } else if (Viraj < Jyot) {
-                result = "Jyot won by " + Math.abs(Viraj - Jyot) + " Votes";
-            } else {
-                result = "It's a Draw! Stay tuned for next Elections...";
-            }
+            String result = Winner + " won with " + mx + " votes";
 
             JOptionPane.showMessageDialog(null, result, "Election Result", JOptionPane.INFORMATION_MESSAGE);
 

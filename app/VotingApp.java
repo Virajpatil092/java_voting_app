@@ -13,91 +13,106 @@ public class VotingApp extends JFrame implements ActionListener {
    
     public VotingApp() {
         super("Voting App");
-        
-        String voterid = JOptionPane.showInputDialog(this, "Enter Voter ID:");
-        System.out.println(voterid);
+    
+        String voterid = "";
+    
+        // Prompt user to enter voter ID
+        while (voterid.equals("")) {
+            voterid = JOptionPane.showInputDialog(this, "Enter Voter ID:");
+        }
+
         if(voterid.equals("")){
-            int result = JOptionPane.showConfirmDialog(null, "Do you want to view the result?", "View Result", JOptionPane.YES_NO_OPTION);
-  
-            // if user selects yes, call the result method
-            if (result == JOptionPane.YES_OPTION) {
-                result();
-            }
+            System.exit(1);
         }
-
-        Boolean hasnotvoted = true;
-        try{
-            BufferedReader res = new BufferedReader(new FileReader("voted.txt")) ;
-            FileWriter myWriter = new FileWriter("voted.txt",true);
-
-            String value;
-
-            while((value = res.readLine()) != null){
-                if(value.equals(voterid)){
-                    hasnotvoted = false;
-                    break;
-                }
-            }
-            if(hasnotvoted){
-                myWriter.append(voterid+"\n");
-            }
-            res.close();
-            myWriter.close();
-
-        }
-        catch(Exception e){
-             
-        }
-
-        if(hasnotvoted){
-            candidateLabel = new JLabel("Select Candidate:");
-            candidateLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-            candidateComboBox = new JComboBox<String>();
-
-            candidateComboBox.addItem("Viraj");
-            candidateComboBox.addItem("Jyot");
-
-
-            voteButton = new JButton("Vote");
-            voteButton.addActionListener(this);
-            voteButton.setBackground(Color.GREEN);
-            voteButton.setText("Cast Vote");
-            voteButton.setHorizontalAlignment(SwingConstants.CENTER);
-
-            // Set layout and add components
-            setLayout(new FlowLayout());
-            add(candidateLabel);
-            add(candidateComboBox);
-            add(voteButton);
-
-            // Set window properties
-            setSize(800, 400);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setLocationRelativeTo(null);
-            setVisible(true);
-        }
-        else{
-            for (Window window : Window.getWindows()) {
-                window.dispose();
-            }
-
-            JOptionPane.showMessageDialog(this, "You have already voted.", "Error", JOptionPane.ERROR_MESSAGE);
-            JButton okButton = new JButton("OK");
-            okButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    for (Window window : Window.getWindows()) {
-                        window.dispose();
+    
+        // Display confirmation dialog box
+        int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to vote with this ID?", "Confirmation", JOptionPane.OK_CANCEL_OPTION);
+    
+        if(option == JOptionPane.OK_OPTION){
+            Boolean hasnotvoted = true;
+    
+            try{
+                BufferedReader res = new BufferedReader(new FileReader("voted.txt")) ;
+                FileWriter myWriter = new FileWriter("voted.txt",true);
+    
+                String value;
+    
+                while((value = res.readLine()) != null){
+                    if(value.equals(voterid)){
+                        hasnotvoted = false;
+                        break;
                     }
                 }
-            });
-            add(okButton);
-            setSize(400, 150);
-            
-
-            new VotingApp();
+                if(hasnotvoted){
+                    myWriter.append(voterid+"\n");
+                }
+                res.close();
+                myWriter.close();
+    
+            }
+            catch(Exception e){
+    
+            }
+    
+            if(hasnotvoted){
+                candidateLabel = new JLabel("Select Candidate:");
+                candidateLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    
+                candidateComboBox = new JComboBox<String>();
+    
+                candidateComboBox.addItem("Viraj");
+                candidateComboBox.addItem("Jyot");
+    
+    
+                voteButton = new JButton("Vote");
+                voteButton.addActionListener(this);
+                voteButton.setBackground(Color.GREEN);
+                voteButton.setText("Cast Vote");
+                voteButton.setHorizontalAlignment(SwingConstants.CENTER);
+    
+                // Set layout and add components
+                setLayout(new FlowLayout());
+                add(candidateLabel);
+                add(candidateComboBox);
+                add(voteButton);
+    
+                // Set window properties
+                setSize(800, 400);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setLocationRelativeTo(null);
+                setVisible(true);
+            }
+            else{
+                for (Window window : Window.getWindows()) {
+                    window.dispose();
+                }
+    
+                JOptionPane.showMessageDialog(this, "You have already voted.", "Error", JOptionPane.ERROR_MESSAGE);
+                JButton okButton = new JButton("OK");
+                okButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        for (Window window : Window.getWindows()) {
+                            window.dispose();
+                        }
+                    }
+                });
+                add(okButton);
+                setSize(400, 150);
+                
+                int result = JOptionPane.showConfirmDialog(null, "Do you want to view the result?", "View Result", JOptionPane.YES_NO_OPTION);
+        
+                // if user selects yes, call the result method
+                if (result == JOptionPane.YES_OPTION) {
+                    result();
+                }
+                new VotingApp();
+            }
         }
-    }
+        else{
+            System.exit(1);
+        }
+    }    
+
 
     public void actionPerformed(ActionEvent e) {
         // Get selected candidate name
@@ -206,6 +221,11 @@ public class VotingApp extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new VotingApp();
+        try{
+            new VotingApp();
+        }
+        catch(Exception e){
+            System.out.println("successfully closed the app");
+        }
     }
 }
